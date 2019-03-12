@@ -1,6 +1,7 @@
 package com.staticInterface;
 
 public class Test implements Interf {
+	@SuppressWarnings("unused")
 	public static void main(String[] args) {
 		Test t = new Test();
 		// t.m1(); //Error
