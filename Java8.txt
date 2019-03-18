@@ -1,0 +1,244 @@
+Why Java 1.8
+=============
+1. To Simplify programming
+2. enable functional programming
+3. enable parallel programming
+
+What are the new features in java 8:
+====================================
+1) Lambda Expression
+2) Functional Interfaces
+3) Default methods
+4) Predicates
+5) Functions
+6) Double colon operator (::)
+7) Stream API
+8) Date and Time API
+
+Lambda Expression is a anonymous function(NameLess function, modifier less, not having any return type).
+   To enable functional programming in java.
+   To write more readable , maintanable and concise code.
+   To use API very easily and effectively
+   To enable parrallel programming
+
+Remove the type (compiler can guess the type based on the context) this is called type inference.
+
+(int a, int b) ==> (a,b)
+
+
+Functional Interface:-
+
+1. only one abstract method. it can have multiple default and static method.
+
+Exp: Runnable -> run method
+	 Callable -> call method
+	 ActionListner -> actionPerformed method
+	 Comparable -> compareTo method
+	 
+Use these interfaces to invoke lambda expression
+
+Functional interface reference can be used to hold lambda expression. we dont need implementation class of interface in case of lambda expression.
+Interface Interf{
+	void m1();
+}
+Interf i = ()->syso("Hello");
+i.m1();
+
+Why only one abstract method in functional interface:-
+	If there are multiple abstract method than there is a problem in mapping in lambda expression. lambda expression will fail.
+	Compiler will get confused to which method implementation is there in lambda expression.
+
+Anonumous inner class vs lambda :-
+
+Anonumous inner class can extend concreat class, abstract class but notlambda expression,
+lambda expression is only applicable for functional interface.
+anonymous inner class is more powerful,
+so only in one case anonymous inner class can be replaced with lambda expression in case of functional interface.
+
+Anonymous inner class:-
+
+class test{
+int x=10; -> class lavel variable
+ void m1(){
+ 
+ }
+}
+Test t = new test(){
+ void m2(){
+ 
+ }
+};
+
+inner class extends class test.
+
+inside anonymous inner class we can declare instance varible but we can only declare local variable inside lambda expression.
+inside anonymous inner class this always refers inner class variable only while inside lambda expression this always refers outer class instance variable.
+
+Note:- Local variable which are referenced from lambda expression is must be or effectively final. only local variable(y in blow example) not class lavel variable.
+interface Interf{
+ void m1();
+}
+class test{
+int x=10; -> class lavel variable
+ void m2(){
+  int y = 20;
+  Interf I = ()->{
+    sop(x);
+	sop(y);
+	x= 100; -> no issue.
+	y=777; -> Error
+  };
+ }
+}
+Test t = new test(){
+ void m2(){
+ 
+ }
+};
+
+Default method in interface:
+============================
+
+This is concreat method in interface. default m1(){sop("Hello");}
+There is may be ambiguity issue in case of multiple interface if both have same signature default method. so we can resolve it with override this default method in implemented class.
+we can write completed new implementation or call the interface implementation with {InterfaceName.super.methodname()}.
+
+Static method in interface
+===========================
+
+just to define general utility methods which are not related to object. 
+Interface static methods always called by interface name only. because static method in interface are not available in implemented class by default.
+overrriding concept not applicable for interface static method.
+
+From java 8 onwards we can run interface directoly as we can define main method in interface.
+
+
+Predefined functional interface :- defined in java.util.function package
+===============================
+1. Predicate<T> :- it is boolean valued function. perform some conditional check and return true or false. it has only boolean test(T t) abstract method. but has multiple default method like add(), negate(), or(). and it is static method isequal. public static Predicate isEqual(T t)
+We use isEqual method to check euality in future. weather the giving element is equal to element represented by predicate.
+Predicate<String> p=Predicate.isEqual("Ranu");
+Syso(p.test("Ranu")); :-true
+2. Function<T,R> :- same as predicate but it can return any value. this interface has apply method. R apply(T t).
+Defalut method: andThen and compose. (Function chaining). f1.andThan(f2). 
+Static method : Identify.
+Function<String,String> f1= Function.identity(); 
+String s2= f1.apply("durga"); 
+System.out.println(s2); :- durga
+3. Consumer<T> :- accept method . void accept (T t). it just consume value and perform required operation. consumer chaining c1.andThan(c2).andThan(c2).andThan(c3).accept(m)
+4. Supplier<R> :- R get() :- does not accept anything but it will return something. no static and default method.
+
+Two Argument functional interfaces
+==================================
+1. BiPredicate (BiPredicate<T,U>) -  boolean test(T t, U u)
+2. BiFunction (BiFunction<T,U,R>) - R apply(T t, U u)
+3. BiConsumer (BiConsumer<T,U>) - accept(T t, U u)
+
+AutoBoxing, AutoUnboxing and Type Parameter(Generic)
+============================================
+AutoBoxing :- Automatic conversion from premitive type to Wrapper class object type by compiler is called autoboxing. (1.5v)
+AutoUnBoxing :- Automatic conversion from Wrapper class object type to premitive type by compiler is called autoboxing. (1.5v)
+Type Parameter(Generic):- Primitive type not allowed it should be object type only.
+
+Premitive functional interfaces.
+================================
+To improve performance we should go for peimitive functional interface. (To avoid autoboxing and unboxing multiple times).
+
+IntPredicate :- boolean test(int i);
+LongPredicate :- boolean test(long l);
+DoublePredicate :- boolean test(double d);
+
+IntFunction<R> :- R apply(int i)
+LongFunction<R> :- R apply(long l)
+DoubleFunction<R> :- R apply(double d)
+ToIntFunction<T> :- int applyAsInt(T t)
+ToLongFunction<T> :- long applyAsInt(T t)
+ToDoubleFunction<T> :- double applyAsInt(T t)
+IntToDoubleFunction :- double applyAsInt(int i)
+IntToLongFunction  :- long applyAsInt(int i)
+DoubleToIntFunction :- int applyAsInt(double d)
+DoubleToLongFunction  :- long applyAsInt(double d)
+LongToIntFunction :- int applyAsInt(long l)
+LongToDoubleFunction  :- double applyAsInt(long l)
+ToIntBiFunction<T,U> :-  int apply(T t,U u)
+ToLongBiFunction<T,U> :-  long apply(T t,U u)
+ToDoubleBiFunction<T,U> :-  double apply(T t,U u)
+
+IntConsumer :- void accept(int i)
+LongConsumer :- void accept(long l)
+DoubleConsumer :- :- void accept(double d)
+ObjIntConsumer :- void accept(T t, int i)
+ObjLongConsumer :- void accept(T t, long l)
+ObjDoubleConsumer :- void accept(T t, double d)
+
+IntSupplier :- int getAsInt();
+LongSupplier :- long getAsLong();
+DoubleSupplier :- double getAsDouble();
+BooleanSupplier :- boolean getAsBoolean();
+
+UnaryOperator<T>: It is child of Function<T,T>. If input and output are same type then we should go for UnaryOperator
+IntUnaryOperator: public int applyAsInt(int)
+LongUnaryOperator: public long applyAsLong(long)
+DoubleUnaryOperator: public double applyAsDouble(double)
+
+BinaryOperator: It is the child of BiFunction<T,T,T>
+BinaryOperator<T> public T apply(T,T)
+1. IntBinaryOperator public int applyAsInt(int i,int j)
+2. LongBinaryOperator public long applyAsLong(long l1,long l2)
+3. DoubleBinaryOperator public double applyAsLong(double d1,double d2)
+
+Method and Constructor Reference By using :: Operator
+=====================================================
+Interf i = Test :: m2; :- both method should be same argument type.(Mthod in interface and reference method)
+Mthod reference is alternative of lambda expression.
+
+syntax dor method reference:
+
+1. if static method
+    classname :: method name;
+	eg: Test :: m2;
+
+2. non static method
+	ObjectRef :: methodname;
+	eg; Test t = new Test()
+		t :: m2;
+		
+Constructor reference:
+classname::new;
+
+Streams:
+========
+
+To process objects from collection.
+
+Configure using Filter :- if you want to filter element from collection based on some boolean condition. :- predicate
+Configure using Map :- if you want to create new object for every element in collection based on some function. :- function
+Processing using collect method:- this method collect the elements from stream and added to the specified collection.
+Processing using count method:- This method return number of element present in the stream. long count()
+Processing using sorted method :- to sort the element. sorted() for default sorting order. sorted(Comparator c) for own sorting.
+Processing using min and max method :- min(Comparator c), max(Comparator c)
+Processing using forEach method :- this can take lambda expression as argument and apply that lambda expression on each element in stream and this method wont return anything.
+Processing using toArray method:- To copy elements present in the stream to specified Array.
+Stream.Of method :- We can also apply stream for group of values & for arrays.
+
+Date and Time API(JODA API)
+===========================
+To handle date and time very effectively. developed by joda.org. 
+LocalDate d = LocalDate.now();
+LocalTime t = LocalTime.now();
+getDayOfMonth()
+getMonthValue()
+getYear()
+getHour();
+getMinute();
+time.getSecond();
+time.getNano();
+
+LocalDateTime dt = LocalDateTime.now();
+Period
+Year
+ZoneId
+ZonedDateTime
+
+
+
